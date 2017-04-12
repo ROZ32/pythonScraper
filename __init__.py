@@ -22,3 +22,5 @@ __copyright__ = "Copyright (c) 2017 Oscar Sanchez"
 __license__ = "MIT"
 
 from pythonScraper.simpleScraper import SimpleScraper
+
+__all__ = ['SimpleScraper']
