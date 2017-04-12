@@ -16,9 +16,12 @@ documentation:
 http://www.crummy.com/software/BeautifulSoup/bs4/doc/
 """
 
-__author__ = "Oscar Sanchez (hmax dot bf4 at gmail dot com)"
+__author__ = "Oscar Sanchez"
+__authormail__ = "hmax dot bf4 at gmail dot com"
 __version__ = "0.1"
 __copyright__ = "Copyright (c) 2017 Oscar Sanchez"
-__license__ = "MIT"
+__license__ = "MIT License"
 
 from pythonScraper.simpleScraper import SimpleScraper
+
+__all__ = ['SimpleScraper']
