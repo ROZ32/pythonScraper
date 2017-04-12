@@ -10,17 +10,23 @@ import re
 here = os.path.abspath(os.path.dirname(__file__))
 
 def get_tag(tag_name):
-    with open(os.path.join(here, '__init__.py'), 'rb') as init_py:
-        src = init_py.read().decode('utf-8')
-        return re.search(tag_name + " = ['\"]([^'\"]+)['\"]", src).group(1)
+    try:
+        with open(os.path.join(here, '__init__.py'), 'rb') as init_py:
+            src = init_py.read().decode('utf-8')
+            return re.search(tag_name + " = ['\"]([^'\"]+)['\"]", src).group(1)
+    except Exception as e:
+        return 'not found, ' + tag_name
 
 def read(*filenames, **kwargs):
     encoding = kwargs.get('encoding', 'utf-8')
     sep = kwargs.get('sep', '\n')
     buf = []
     for filename in filenames:
-        with io.open(filename, encoding=encoding) as f:
-            buf.append(f.read())
+        try:
+            with io.open(filename, encoding=encoding) as f:
+                buf.append(f.read())
+        except Exception as e:
+            pass
     return sep.join(buf)
 
 long_description = read('README.md')
