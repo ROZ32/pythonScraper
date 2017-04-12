@@ -1,6 +1,6 @@
 import urllib2
 
-from lib.bs4 import BeautifulSoup
+from bs4 import BeautifulSoup
 from urlparse import urlparse
 
 try:
