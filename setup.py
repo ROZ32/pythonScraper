@@ -43,7 +43,7 @@ class PyTest(TestCommand):
         sys.exit(errcode)
 
 setup(
-    name='SimpleScraper',
+    name='simplescraper',
     version=get_tag('__version__'),
     url='https://github.com/ROZ32/pythonScraper',
     license=get_tag('__license__'),
@@ -59,11 +59,11 @@ setup(
     test_suite='pythonScraper.test.test_SimpleScraper',
     classifiers = [
         'Programming Language :: Python',
-        'Development Status :: 1 - Beta',
+        'Development Status :: 4 - Beta',
         'Natural Language :: English',
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
-        'License :: MIT License',
+        'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent'
         ],
     extras_require={

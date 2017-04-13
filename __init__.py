@@ -1,13 +1,13 @@
-"""simpleScraper
-simpleScraper uses a pluggable XML or HTML parser to parse a
+"""simplescraper
+simplescraper uses a pluggable XML or HTML parser to parse a
 (possibly invalid) document into a tree representation and get the content
-OG tags, meta tags and link tags. simpleScraper provides method that make it easy to
+OG tags, meta tags and link tags. simplescraper provides method that make it easy to
 get the content of the scraped website
 
-simpleScraper works with Python 2.7 It works better if lxml
+simplescraper works with Python 2.7 It works better if lxml
 and/or html5lib is installed.
 
-For more than you ever wanted to know about simpleScraper, see the
+For more than you ever wanted to know about simplescraper, see the
 documentation:
 TODO
 """
