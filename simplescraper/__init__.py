@@ -14,10 +14,10 @@ TODO
 
 __author__ = "Oscar Sanchez"
 __authormail__ = "hmax dot bf4 at gmail dot com"
-__version__ = "0.1"
+__version__ = "0.1.2"
 __copyright__ = "Copyright (c) 2017 Oscar Sanchez"
 __license__ = "MIT License"
 
-from pythonScraper.simpleScraper import SimpleScraper
+from scraper import SimpleScraper
 
 __all__ = ['SimpleScraper']

@@ -11,7 +11,7 @@ here = os.path.abspath(os.path.dirname(__file__))
 
 def get_tag(tag_name):
     try:
-        with open(os.path.join(here, '__init__.py'), 'rb') as init_py:
+        with open(os.path.join(here, 'simplescraper/__init__.py'), 'rb') as init_py:
             src = init_py.read().decode('utf-8')
             return re.search(tag_name + " = ['\"]([^'\"]+)['\"]", src).group(1)
     except Exception as e:
@@ -48,6 +48,7 @@ setup(
     url='https://github.com/ROZ32/pythonScraper',
     license=get_tag('__license__'),
     author=get_tag('__author__'),
+    packages=['simplescraper'],
     tests_require=['pytest'],
     install_requires=[
         'beautifulsoup4',
@@ -57,7 +58,6 @@ setup(
     author_email=get_tag('__authormail__'),
     description='A simple python web scraper',
     long_description=long_description,
-    include_package_data=True,
     platforms='any',
     test_suite='pythonScraper.test.test_SimpleScraper',
     classifiers = [
