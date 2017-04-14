@@ -55,7 +55,8 @@ class SimpleScraper():
                     except URLError, e:
                         return e
                     # try secure protocol
-                    if requestResult.getcode() < 200 and requestResult.getcode() > 400:
+                    request_code = requestResult.getcode()
+                    if request_code < 200 and request_code > 400:
                         link_to_scrap = SECURE_HTTP_PROTOCOL + INFORMATION_SPACE + link_to_scrap
                         try:
                             requestResult = urllib2.urlopen(link_to_scrap)
@@ -68,7 +69,8 @@ class SimpleScraper():
                     except URLError, e:
                         return e
                     # try secure protocol
-                    if requestResult.getcode() < 200 and requestResult.getcode() > 400:
+                    request_code = requestResult.getcode()
+                    if request_code < 200 and request_code > 400:
                         link_to_scrap = SECURE_HTTP_PROTOCOL + link_to_scrap
                         try:
                             requestResult = urllib2.urlopen(link_to_scrap)
@@ -81,7 +83,8 @@ class SimpleScraper():
                         return e
             except Exception, e:
                 return result
-            if requestResult.getcode() >= 200 and requestResult.getcode() <= 400:
+            request_code = requestResult.getcode()
+            if request_code >= 200 and request_code <= 400:
                 page = requestResult.read()
                 soup = BeautifulSoup(page, DEFAULT_HTML_PARSER)
                 all_meta_tags = soup.find_all(META_TAG)
