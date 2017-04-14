@@ -1,5 +1,5 @@
 from mock import patch, Mock
-from pythonScraper import SimpleScraper
+from simplescraper import SimpleScraper
 import os
 import codecs
 
