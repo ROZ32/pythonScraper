@@ -49,7 +49,10 @@ setup(
     license=get_tag('__license__'),
     author=get_tag('__author__'),
     tests_require=['pytest'],
-    install_requires=['beautifulsoup4','html5lib'],
+    install_requires=[
+        'beautifulsoup4',
+        'html5lib'
+        ],
     cmdclass={'test': PyTest},
     author_email=get_tag('__authormail__'),
     description='A simple python web scraper',
@@ -67,6 +70,6 @@ setup(
         'Operating System :: OS Independent'
         ],
     extras_require={
-        'testing': ['pytest'],
+        'testing': ['pytest', 'mock'],
     }
 )
