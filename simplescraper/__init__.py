@@ -18,6 +18,6 @@ __version__ = "0.1.2"
 __copyright__ = "Copyright (c) 2017 Oscar Sanchez"
 __license__ = "MIT License"
 
-from scraper import SimpleScraper
+from .scraper import SimpleScraper
 
 __all__ = ['SimpleScraper']

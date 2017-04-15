@@ -1,7 +1,18 @@
-import urllib2
-
 from bs4 import BeautifulSoup
-from urlparse import urlparse
+
+try:
+    # For Python 3.0 and later
+    from urllib.request import urlopen
+except ImportError:
+    # Fall back to Python 2's urllib2
+    from urllib2 import urlopen
+
+try:
+    # For Python 3.0 and later
+    from urllib.parse import urlparse
+except ImportError:
+    # Fall back to Python 2's urlparse
+    from urlparse import urlparse
 
 try:
     from simplejson import loads, dumps
@@ -51,37 +62,37 @@ class SimpleScraper():
                 if (link_to_scrap.find(INFORMATION_SPACE) == -1 and link_to_scrap.find(HTTP_PROTOCOL) == -1):
                     link_to_scrap = HTTP_PROTOCOL_NORMAL + INFORMATION_SPACE + link_to_scrap
                     try:
-                        requestResult = urllib2.urlopen(link_to_scrap)
-                    except URLError, e:
+                        requestResult = urlopen(link_to_scrap)
+                    except URLError as e:
                         return e
                     # try secure protocol
                     request_code = requestResult.getcode()
                     if request_code < 200 and request_code > 400:
                         link_to_scrap = SECURE_HTTP_PROTOCOL + INFORMATION_SPACE + link_to_scrap
                         try:
-                            requestResult = urllib2.urlopen(link_to_scrap)
-                        except URLError, e:
+                            requestResult = urlopen(link_to_scrap)
+                        except URLError as e:
                             return e
                 elif (link_to_scrap.find(HTTP_PROTOCOL) == -1):
                     link_to_scrap = HTTP_PROTOCOL_NORMAL + link_to_scrap
                     try:
-                        requestResult = urllib2.urlopen(link_to_scrap)
-                    except URLError, e:
+                        requestResult = urlopen(link_to_scrap)
+                    except URLError as e:
                         return e
                     # try secure protocol
                     request_code = requestResult.getcode()
                     if request_code < 200 and request_code > 400:
                         link_to_scrap = SECURE_HTTP_PROTOCOL + link_to_scrap
                         try:
-                            requestResult = urllib2.urlopen(link_to_scrap)
-                        except URLError, e:
+                            requestResult = urlopen(link_to_scrap)
+                        except URLError as e:
                             return e
                 else:
                     try:
-                        requestResult = urllib2.urlopen(link_to_scrap)
-                    except URLError, e:
+                        requestResult = urlopen(link_to_scrap)
+                    except URLError as e:
                         return e
-            except Exception, e:
+            except Exception as e:
                 return result
             request_code = requestResult.getcode()
             if request_code >= 200 and request_code <= 400:
@@ -108,7 +119,7 @@ class SimpleScraper():
                         result[IMAGE] = HTTP_PROTOCOL_NORMAL + result[SOURCE] + result[IMAGE]
 
             return result
-        except StandardError, e:
+        except StandardError as e:
             return e
 
 
