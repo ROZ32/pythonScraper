@@ -57,4 +57,9 @@ def test_malformed_path(mock_urlopen):
 	mock_urlopen.return_value = get_request_mock(success=False)
 	test = SimpleScraper()
 	result = test.get_scraped_data('.google.com')
-	assert len(result) == 0
+	assert 'error' in result
+
+def test_no_content_provided():
+	test = SimpleScraper()
+	result = test.get_scraped_data('')
+	assert 'error' in result

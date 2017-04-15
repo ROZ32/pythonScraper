@@ -3,9 +3,13 @@ from bs4 import BeautifulSoup
 try:
     # For Python 3.0 and later
     from urllib.request import urlopen
+    from urllib.error import URLError
+    from urllib.error import HTTPError
 except ImportError:
     # Fall back to Python 2's urllib2
     from urllib2 import urlopen
+    from urllib2 import URLError
+    from urllib2 import HTTPError
 
 try:
     # For Python 3.0 and later
@@ -42,7 +46,7 @@ THEME_COLOR = "theme-color"
 OG = "og:"
 DEFAULT_HTML_PARSER = "html5lib"
 DEFAULT_HTML5_VIDEO_EMBED = "text/html"
-INFORMATION_SPACE = 'www.'
+INFORMATION_SPACE = "www."
 HTTP_PROTOCOL = "http"
 HTTP_PROTOCOL_NORMAL = "http://"
 SECURE_HTTP_PROTOCOL = "https://"
@@ -61,39 +65,31 @@ class SimpleScraper():
             try:
                 if (link_to_scrap.find(INFORMATION_SPACE) == -1 and link_to_scrap.find(HTTP_PROTOCOL) == -1):
                     link_to_scrap = HTTP_PROTOCOL_NORMAL + INFORMATION_SPACE + link_to_scrap
-                    try:
-                        requestResult = urlopen(link_to_scrap)
-                    except URLError as e:
-                        return e
+                    requestResult = self.__get_request_content(link_to_scrap)
+
                     # try secure protocol
                     request_code = requestResult.getcode()
                     if request_code < 200 and request_code > 400:
                         link_to_scrap = SECURE_HTTP_PROTOCOL + INFORMATION_SPACE + link_to_scrap
-                        try:
-                            requestResult = urlopen(link_to_scrap)
-                        except URLError as e:
-                            return e
+                        requestResult = self.__get_request_content(link_to_scrap)
+
                 elif (link_to_scrap.find(HTTP_PROTOCOL) == -1):
                     link_to_scrap = HTTP_PROTOCOL_NORMAL + link_to_scrap
-                    try:
-                        requestResult = urlopen(link_to_scrap)
-                    except URLError as e:
-                        return e
+                    requestResult = self.__get_request_content(link_to_scrap)
+
                     # try secure protocol
                     request_code = requestResult.getcode()
                     if request_code < 200 and request_code > 400:
                         link_to_scrap = SECURE_HTTP_PROTOCOL + link_to_scrap
-                        try:
-                            requestResult = urlopen(link_to_scrap)
-                        except URLError as e:
-                            return e
+                        requestResult = self.__get_request_content(link_to_scrap)
+
                 else:
-                    try:
-                        requestResult = urlopen(link_to_scrap)
-                    except URLError as e:
-                        return e
+                    requestResult = self.__get_request_content(link_to_scrap)
             except Exception as e:
-                return e
+                return {
+                    "error": "cannot scrap the provided url", 
+                    "reason": e.args[0]
+                }
             request_code = requestResult.getcode()
             if request_code >= 200 and request_code <= 400:
                 page = requestResult.read()
@@ -120,7 +116,23 @@ class SimpleScraper():
 
             return result
         except StandardError as e:
-            return e
+            return {
+                "error": "cannot scrap the provided url", 
+                "reason": e.args[0]
+            }
+
+
+    def __get_request_content(self, link):
+        try:
+            return urlopen(link)
+        except URLError as e:
+            raise Exception (
+                    "cannot get url content %s" % str(e.reason)
+                )
+        except HTTPError as e:
+            raise Exception (
+                    "cannot make http request %s" % str(e.reason)
+                )
 
 
     def __verifyTagName(self, result, tag):
