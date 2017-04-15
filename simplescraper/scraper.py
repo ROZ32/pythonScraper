@@ -1,7 +1,22 @@
-import urllib2
-
 from bs4 import BeautifulSoup
-from urlparse import urlparse
+
+try:
+    # For Python 3.0 and later
+    from urllib.request import urlopen
+    from urllib.error import URLError
+    from urllib.error import HTTPError
+except ImportError:
+    # Fall back to Python 2's urllib2
+    from urllib2 import urlopen
+    from urllib2 import URLError
+    from urllib2 import HTTPError
+
+try:
+    # For Python 3.0 and later
+    from urllib.parse import urlparse
+except ImportError:
+    # Fall back to Python 2's urlparse
+    from urlparse import urlparse
 
 try:
     from simplejson import loads, dumps
@@ -31,7 +46,7 @@ THEME_COLOR = "theme-color"
 OG = "og:"
 DEFAULT_HTML_PARSER = "html5lib"
 DEFAULT_HTML5_VIDEO_EMBED = "text/html"
-INFORMATION_SPACE = 'www.'
+INFORMATION_SPACE = "www."
 HTTP_PROTOCOL = "http"
 HTTP_PROTOCOL_NORMAL = "http://"
 SECURE_HTTP_PROTOCOL = "https://"
@@ -50,39 +65,31 @@ class SimpleScraper():
             try:
                 if (link_to_scrap.find(INFORMATION_SPACE) == -1 and link_to_scrap.find(HTTP_PROTOCOL) == -1):
                     link_to_scrap = HTTP_PROTOCOL_NORMAL + INFORMATION_SPACE + link_to_scrap
-                    try:
-                        requestResult = urllib2.urlopen(link_to_scrap)
-                    except URLError, e:
-                        return e
+                    requestResult = self.__get_request_content(link_to_scrap)
+
                     # try secure protocol
                     request_code = requestResult.getcode()
                     if request_code < 200 and request_code > 400:
                         link_to_scrap = SECURE_HTTP_PROTOCOL + INFORMATION_SPACE + link_to_scrap
-                        try:
-                            requestResult = urllib2.urlopen(link_to_scrap)
-                        except URLError, e:
-                            return e
+                        requestResult = self.__get_request_content(link_to_scrap)
+
                 elif (link_to_scrap.find(HTTP_PROTOCOL) == -1):
                     link_to_scrap = HTTP_PROTOCOL_NORMAL + link_to_scrap
-                    try:
-                        requestResult = urllib2.urlopen(link_to_scrap)
-                    except URLError, e:
-                        return e
+                    requestResult = self.__get_request_content(link_to_scrap)
+
                     # try secure protocol
                     request_code = requestResult.getcode()
                     if request_code < 200 and request_code > 400:
                         link_to_scrap = SECURE_HTTP_PROTOCOL + link_to_scrap
-                        try:
-                            requestResult = urllib2.urlopen(link_to_scrap)
-                        except URLError, e:
-                            return e
+                        requestResult = self.__get_request_content(link_to_scrap)
+
                 else:
-                    try:
-                        requestResult = urllib2.urlopen(link_to_scrap)
-                    except URLError, e:
-                        return e
-            except Exception, e:
-                return result
+                    requestResult = self.__get_request_content(link_to_scrap)
+            except Exception as e:
+                return {
+                    "error": "cannot scrap the provided url", 
+                    "reason": e.args[0]
+                }
             request_code = requestResult.getcode()
             if request_code >= 200 and request_code <= 400:
                 page = requestResult.read()
@@ -91,10 +98,10 @@ class SimpleScraper():
                 all_link_tags = soup.find_all(LINK_TAG, {"rel": "canonical"})
                 default_title = soup.find(TITLE)
                 for tag in all_meta_tags:
-                    result = self.verifyTagName(result, tag)
+                    result = self.__verifyTagName(result, tag)
                     if TITLE not in result and default_title is not None:
                         result[TITLE] = default_title.contents[0]
-                result = self.verifyTagOpenGraph(result, all_meta_tags)
+                result = self.__verifyTagOpenGraph(result, all_meta_tags)
                 for tag in all_link_tags:
                     href = tag.get(HREF_PROPERTY)
                     if href is not None:
@@ -108,11 +115,27 @@ class SimpleScraper():
                         result[IMAGE] = HTTP_PROTOCOL_NORMAL + result[SOURCE] + result[IMAGE]
 
             return result
-        except StandardError, e:
-            return e
+        except StandardError as e:
+            return {
+                "error": "cannot scrap the provided url", 
+                "reason": e.args[0]
+            }
 
 
-    def verifyTagName(self, result, tag):
+    def __get_request_content(self, link):
+        try:
+            return urlopen(link)
+        except URLError as e:
+            raise Exception (
+                    "cannot get url content %s" % str(e.reason)
+                )
+        except HTTPError as e:
+            raise Exception (
+                    "cannot make http request %s" % str(e.reason)
+                )
+
+
+    def __verifyTagName(self, result, tag):
         tag_content = tag.get(CONTENT)
         tag_to_search = tag.get(NAME)
         if tag_to_search is None:
@@ -129,7 +152,7 @@ class SimpleScraper():
         return result
 
 
-    def verifyTagOpenGraph(self, result, all_tags):
+    def __verifyTagOpenGraph(self, result, all_tags):
         open_graph_objects = {}
         searching_iter_name = first_sub_element = last_sub_element = last_element = None
 
