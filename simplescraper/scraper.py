@@ -93,7 +93,7 @@ class SimpleScraper():
                     except URLError as e:
                         return e
             except Exception as e:
-                return result
+                return e
             request_code = requestResult.getcode()
             if request_code >= 200 and request_code <= 400:
                 page = requestResult.read()
@@ -102,10 +102,10 @@ class SimpleScraper():
                 all_link_tags = soup.find_all(LINK_TAG, {"rel": "canonical"})
                 default_title = soup.find(TITLE)
                 for tag in all_meta_tags:
-                    result = self.verifyTagName(result, tag)
+                    result = self.__verifyTagName(result, tag)
                     if TITLE not in result and default_title is not None:
                         result[TITLE] = default_title.contents[0]
-                result = self.verifyTagOpenGraph(result, all_meta_tags)
+                result = self.__verifyTagOpenGraph(result, all_meta_tags)
                 for tag in all_link_tags:
                     href = tag.get(HREF_PROPERTY)
                     if href is not None:
@@ -123,7 +123,7 @@ class SimpleScraper():
             return e
 
 
-    def verifyTagName(self, result, tag):
+    def __verifyTagName(self, result, tag):
         tag_content = tag.get(CONTENT)
         tag_to_search = tag.get(NAME)
         if tag_to_search is None:
@@ -140,7 +140,7 @@ class SimpleScraper():
         return result
 
 
-    def verifyTagOpenGraph(self, result, all_tags):
+    def __verifyTagOpenGraph(self, result, all_tags):
         open_graph_objects = {}
         searching_iter_name = first_sub_element = last_sub_element = last_element = None
 
