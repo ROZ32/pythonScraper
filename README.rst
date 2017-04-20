@@ -36,7 +36,7 @@ output:
         title: 'Just a test page'
     }
 
-You can also call it without using the 'www' as 'test.com' if the web page has a redirection. If the web page needs the usage of the https protocol to be access you can call it as: 'https://www.test.com', this is not mandatory since the scraper checks if the protocol is needed.
+You can also call it without using the 'www' as 'test.com' if the web page has a redirection. If the web page needs the usage of the https protocol to be accessed you can call it as: 'https://www.test.com', this is not mandatory since the scraper checks if the protocol is needed.
 
 Get iframe:
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -59,7 +59,7 @@ output:
         iframe: '<iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" height="720" width="1280"></iframe>'
     }
 This is on `GitHub <https://github.com/ROZ32/pythonScraper>`__ so let me
-know if I've b0rked it somewhere.
+know if I've broked it somewhere.
 
 Stuff used to make this:
 ~~~~~~~~~~~~~~~~~~~~~~~~
